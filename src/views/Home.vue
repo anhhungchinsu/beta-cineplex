@@ -24,9 +24,9 @@
               <div class="row">
                 <div class="col-12 text-right">
                   <div class="pre-form">
-                    <a href="#">Đăng nhập</a>
+                    <a @click="getCurrentPage(7)" href="#">Đăng nhập</a>
                     <span> | </span>
-                    <a href="#">Đăng ký</a>
+                    <a @click="getCurrentPage(7)" href="#">Đăng ký</a>
                   </div>
                 </div>
               </div>
@@ -56,11 +56,11 @@
                 <ul>
                   <li><a @click="getCurrentPage(1)" href="#">lịch chiếu theo rạp</a></li>
                   <li><a @click="getCurrentPage(2)" href="#">phim</a></li> 
-                  <li><a href="#">rạp</a></li>
-                  <li><a href="#">giá vé</a></li>
-                  <li><a href="#">tin mới và ưu đãi</a></li>
-                  <li><a href="#">nhượng quyền</a></li>
-                  <li><a href="#">thành viên</a></li>
+                  <li><a @click="getCurrentPage(3)" href="#">rạp</a></li>
+                  <li><a @click="getCurrentPage(4)" href="#">giá vé</a></li>
+                  <li><a @click="getCurrentPage(5)" href="#">tin mới và ưu đãi</a></li>
+                  <li><a @click="getCurrentPage(6)" href="#">nhượng quyền</a></li>
+                  <li><a @click="getCurrentPage(7)" href="#">thành viên</a></li>
                 </ul>
               </div>
             </div>
@@ -68,7 +68,7 @@
         </div>
       </div>
       <template>
-        <component :is="currentPage" :currentTab="currentTab" :movies="movies" :moviesCanBuy="moviesCanBuy" :movieDetail="movieDetail" @selectTab="selectTab" @getCurrentPage="getCurrentPage" @getDetailMovie='getDetailMovie'></component>
+        <component :is="currentPage" :currentTab="currentTab" :movies="movies" :moviesCanBuy="moviesCanBuy" :movieDetail="movieDetail" :selectedCinema="selectedCinema" @selectTab="selectTab" @getCurrentPage="getCurrentPage" @getDetailMovie='getDetailMovie' @getDetailNew="getDetailNew"></component>
       </template>
       
       <footer-page></footer-page>
@@ -81,6 +81,12 @@ import HomePage from '../components/HomePage'
 import MoviePage from '../components/MoviePage'
 import MovieSchedule from '../components/MovieSchedule'
 import MovieDetailPage from '../components/MovieDetailPage'
+import CinemaPage from '../components/CinemaPage'
+import TicketPage from '../components/TicketPage'
+import NewPage from '../components/NewPage'
+import NewDetailPage from '../components/NewDetailPage'
+import FranchisePage from '../components/FranchisePage'
+import RegisterPage from '../components/RegisterPage'
 import axios from 'axios'
 import $ from 'jquery'
 import _ from 'lodash'
@@ -92,7 +98,13 @@ export default {
       FooterPage,
       MovieSchedule,
       MoviePage,
-      MovieDetailPage
+      MovieDetailPage,
+      CinemaPage,
+      TicketPage,
+      NewPage,
+      NewDetailPage,
+      FranchisePage,
+      RegisterPage
     },
     data() {
       return {
@@ -182,8 +194,32 @@ export default {
           this.currentPage = "MoviePage"
           return
         }
+        if(page === 3) {
+          this.currentPage = "CinemaPage"
+          return
+        }
+        if(page === 4) {
+          this.currentPage = "TicketPage"
+          return
+        }
+        if(page === 5) {
+          this.currentPage = "NewPage"
+          return
+        }
+        if(page === 6) {
+          this.currentPage = "FranchisePage"
+          return
+        }
+        if(page === 7) {
+          this.currentPage = "RegisterPage"
+          return
+        }
         if(page === 10) {
           this.currentPage = "MovieDetailPage"
+          return
+        }
+        if(page === 11) {
+          this.currentPage = "NewDetailPage"
           return
         }
         this.currentPage = "HomePage"
@@ -192,6 +228,10 @@ export default {
       getDetailMovie(movie) {
         this.movieDetail = movie
         this.currentPage = "MovieDetailPage"
+      },
+      getDetailNew() {
+        this.getCurrentPage(11)
+        this.currentPage = "NewDetailPage"
       }
     },
     created() {
@@ -417,6 +457,7 @@ export default {
     a:hover {
       cursor: pointer;
     }
+    
   }
 </style>
 
