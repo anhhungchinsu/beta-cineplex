@@ -17,7 +17,7 @@
                 <p><b>Thể loại:</b>{{movie.movie_type}}</p>
                 <p><b>Thời lượng:</b> {{movie.movie_time}}</p>
                 <div>
-                  <a href="#">Mua vé</a>
+                  <a @click="buyTicket(movie.movie_id)" href="#">Mua vé</a>
                 </div>
               </div>
             </div>
@@ -49,7 +49,7 @@ export default {
       let arr = []
       const day = 1000 * 60 * 60 * 24
       let now = new Date()
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < 5; i++) {
         let d = new Date(now.setTime(now.getTime() + day))
         arr.push(d.toISOString().slice(0, 10))
       }
@@ -68,6 +68,9 @@ export default {
         d = new Date(d.setTime(d.getTime() + day)).toISOString().slice(0, 10)
         return d === date
       })
+    },
+    buyTicket(movieId) {
+      this.$emit('buyTicket', movieId)
     }
   },
   computed: {

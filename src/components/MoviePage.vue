@@ -19,7 +19,7 @@
                 <p><b>Thể loại:</b>{{movie.movie_type}}</p>
                 <p><b>Thời lượng:</b> {{movie.movie_time}}</p>
                 <div v-if="checkCanBuy(movie.movie_name) > -1 ">
-                  <a href="#">Mua vé</a>
+                  <a @click="buyTicket(movie.movie_id)" href="#">Mua vé</a>
                 </div>
               </div>
             </div>
@@ -57,6 +57,9 @@ export default {
     },
     getDetailMovie(movie) {
       this.$emit('getDetailMovie', movie)
+    },
+    buyTicket(movieId) {
+      this.$emit('buyTicket', movieId)
     }
   }
 }

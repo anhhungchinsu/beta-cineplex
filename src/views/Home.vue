@@ -21,12 +21,21 @@
       </div>
       <div class="header-pre">
           <div class="container">
-              <div class="row">
+              <div v-if="user === null" class="row">
                 <div class="col-12 text-right">
                   <div class="pre-form">
                     <a @click="getCurrentPage(7)" href="#">Đăng nhập</a>
                     <span> | </span>
                     <a @click="getCurrentPage(7)" href="#">Đăng ký</a>
+                  </div>
+                </div>
+              </div>
+              <div v-else class="row">
+                <div class="col-12 text-right">
+                  <div class="pre-form">
+                    <a @click="getCurrentPage(7)" href="#">{{user.user_name}}</a>
+                    <span> | </span>
+                    <a @click="logout()" href="#">Đăng Xuất</a>
                   </div>
                 </div>
               </div>
@@ -68,7 +77,7 @@
         </div>
       </div>
       <template>
-        <component :is="currentPage" :currentTab="currentTab" :movies="movies" :moviesCanBuy="moviesCanBuy" :movieDetail="movieDetail" :selectedCinema="selectedCinema" @selectTab="selectTab" @getCurrentPage="getCurrentPage" @getDetailMovie='getDetailMovie' @getDetailNew="getDetailNew"></component>
+        <component :is="currentPage" :currentTab="currentTab" :movies="movies" :moviesCanBuy="moviesCanBuy" :movieDetail="movieDetail" :selectedCinema="selectedCinema" :user="user" @selectTab="selectTab" @getCurrentPage="getCurrentPage" @getDetailMovie='getDetailMovie' @getDetailNew="getDetailNew" @changeUser="changeUser" @buyTicket="buyTicket"></component>
       </template>
       
       <footer-page></footer-page>
@@ -117,7 +126,8 @@ export default {
         currentTab: 2,
         moviesCanBuy: [],
         currentPage: "HomePage",
-        movieDetail: null
+        movieDetail: null,
+        user: null
       }
     },
     methods: {
@@ -232,6 +242,29 @@ export default {
       getDetailNew() {
         this.getCurrentPage(11)
         this.currentPage = "NewDetailPage"
+      },
+      changeUser(currentUser) {
+        this.user = currentUser
+      },
+      logout() {
+        this.user = null
+      },
+      buyTicket(movieId) {
+        if(this.user === null) {
+          this.currentPage = "RegisterPage"
+        } else {
+          console.log(movieId, new Date().toISOString().slice(0, 10))
+          axios.post(`http://localhost:3000/ticket`, {
+            ticket_id : Math.floor(Math.random() * 9999),
+            ticket_movie_showing_id : movieId,
+            ticket_user_id : this.user.user_id,
+            ticket_date : new Date().toISOString().slice(0, 10)
+          })
+          .then(res => {
+            console.log(res)
+            alert('Mua thành công!')
+          })
+        }
       }
     },
     created() {

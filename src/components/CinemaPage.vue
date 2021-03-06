@@ -21,7 +21,7 @@
                         <p><b>Thể loại:</b>{{movie.movie_type}}</p>
                         <p><b>Thời lượng:</b> {{movie.movie_time}}</p>
                         <div>
-                        <a class="btn btn-primary" href="#">Mua vé</a>
+                        <a @click="buyTicket(movie.movie_id)" class="btn btn-primary" href="#">Mua vé</a>
                         </div>
                     </div>
                   </div>
@@ -49,6 +49,9 @@ export default {
   methods: {
     getDetailMovie(movie) {
       this.$emit('getDetailMovie', movie)
+    },
+    buyTicket(movieId) {
+      this.$emit('buyTicket', movieId)
     }
   }
 }
