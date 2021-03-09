@@ -19,6 +19,48 @@
           </div>
         </div>
       </div>
+      <div v-if="user != null" id="ticketModal" class="modal bd-example-modal-lg" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title"><img width="55" height="55" src="../assets/img/tickets.png" alt="">TICKETS</h1>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-6 text-left mb-3" style="border-right: 1px solid #20c997">
+                  <h3>
+                    CHI TIẾT PHIM
+                  </h3>
+                  <img width="150" class="img-thumbnail mb-3" :src="ticketMovie.movie_image" alt="">
+                  <p><b>Tên phim:</b> {{ticketMovie.movie_name}}</p>
+                  <p><b>Tác giả:</b> {{ticketMovie.movie_director}}</p>
+                  <p><b>Thể loại:</b> {{ticketMovie.movie_type}}</p>
+                  <p><b>Thời lượng:</b> {{ticketMovie.movie_time}}</p>
+                  <p><b>Ngày công chiếu:</b> {{ticketMovie.movie_start_date}}</p>
+                  <p><b>Giá vé:</b> <img src="../assets/img/free.png"></p>
+                </div>
+                <div class="col-6 text-left mb-3">
+                  <h3>
+                    THÔNG TIN 
+                  </h3>
+                  <p><b>Tên bạn:</b> {{user.user_name}}</p>
+                  <p><b>Địa chỉ bạn:</b> {{user.user_address}}</p>
+                  <p><b>Số điện thoại bạn:</b> {{user.user_phone}}</p>
+                </div>
+              </div>
+              <p class="text-warning">Vé đã đặt vui lòng không trả lại</p>
+              <p><span class="text-danger">Phim dành cho lứa tuổi 18+ </span>
+                <br>Tôi cam kết tuân theo chính sách bảo mật và điều khoản sử dụng của Betacineplex.
+              </p>
+              <input type="checkbox" name="" id=""> Tôi đã hiểu
+              <div class="modal-footer">
+                <button @click="buy()" type="button" class="btn btn-primary">Đặt vé</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="header-pre">
           <div class="container">
               <div v-if="user === null" class="row">
@@ -127,7 +169,8 @@ export default {
         moviesCanBuy: [],
         currentPage: "HomePage",
         movieDetail: null,
-        user: null
+        user: null,
+        ticketMovie: []
       }
     },
     methods: {
@@ -249,22 +292,30 @@ export default {
       logout() {
         this.user = null
       },
-      buyTicket(movieId) {
+      buyTicket(movie) {
         if(this.user === null) {
           this.currentPage = "RegisterPage"
         } else {
-          console.log(movieId, new Date().toISOString().slice(0, 10))
-          axios.post(`http://localhost:3000/ticket`, {
-            ticket_id : Math.floor(Math.random() * 9999),
-            ticket_movie_showing_id : movieId,
-            ticket_user_id : this.user.user_id,
-            ticket_date : new Date().toISOString().slice(0, 10)
+          $(document).ready(()=>{
+            $('#ticketModal').modal('show')
           })
-          .then(res => {
-            console.log(res)
-            alert('Mua thành công!')
-          })
+          this.ticketMovie = movie
         }
+      },
+      buy() {
+      axios.post(`http://localhost:3000/ticket`, {
+        ticket_id : Math.floor(Math.random() * 9999),
+        ticket_movie_showing_id : this.ticketMovie.movie_id,
+        ticket_user_id : this.user.user_id,
+        ticket_date : new Date().toISOString().slice(0, 10)
+      })
+      .then(res => {
+        console.log(res)
+        alert('Mua thành công!')
+        $(document).ready(()=>{
+          $('#ticketModal').modal('hide')
+        })
+      })
       }
     },
     created() {

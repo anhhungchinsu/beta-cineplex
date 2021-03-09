@@ -17,7 +17,7 @@
                 <p><b>Thể loại:</b>{{movie.movie_type}}</p>
                 <p><b>Thời lượng:</b> {{movie.movie_time}}</p>
                 <div>
-                  <a @click="buyTicket(movie.movie_id)" href="#">Mua vé</a>
+                  <a @click="buyTicket(movie)" href="#">Mua vé</a>
                 </div>
               </div>
             </div>
